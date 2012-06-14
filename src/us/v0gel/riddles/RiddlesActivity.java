@@ -1,7 +1,9 @@
-package us.v0gel;
+package us.v0gel.riddles;
 
 import java.util.ArrayList;
 import java.util.Random;
+
+import us.v0gel.R;
 
 import android.app.Activity;
 import android.os.Bundle;

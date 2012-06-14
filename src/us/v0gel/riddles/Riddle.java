@@ -1,4 +1,4 @@
-package us.v0gel;
+package us.v0gel.riddles;
 
 public class Riddle {
 	private String query;
