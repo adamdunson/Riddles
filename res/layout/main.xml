@@ -6,7 +6,8 @@
     <TextView
         android:id="@+id/riddle_text"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:textSize="20sp" />
 
     <LinearLayout
         android:layout_width="fill_parent"
