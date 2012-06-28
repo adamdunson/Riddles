@@ -40,4 +40,8 @@ public class Riddle {
 	public static String answerMe(Riddle riddle) {
 		return riddle.response;
 	}
+	
+	public String toString() {
+		return query.substring(0, 25).trim() + "...";
+	}
 }

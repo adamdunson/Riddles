@@ -4,5 +4,8 @@
     <string name="app_name">Riddles</string>
     <string name="riddle_me">Give me a riddle.</string>
     <string name="answer_me">I want the answer!</string>
+    
+    <string name="manage_riddles">Manage Riddles</string>
+    <string name="save_button">Save</string>
 
 </resources>

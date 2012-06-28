@@ -10,8 +10,13 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ListView;
 import android.widget.TextView;
 
 public class RiddlesActivity
@@ -22,6 +27,8 @@ extends Activity
 	protected DatabaseHelper databaseHelper;
 	private TextView riddleText;
 	private static Random generator = new Random();
+	private Button riddleMe;
+	private Button answerMe;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -36,7 +43,7 @@ extends Activity
 		riddleText = (TextView)findViewById(R.id.riddle_text);
 		riddleText.setText(currentRiddle.getQuery());
 
-		final Button riddleMe = (Button)findViewById(R.id.riddle_me);
+		riddleMe = (Button)findViewById(R.id.riddle_me);
 		riddleMe.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				currentRiddle = riddles.get(generator.nextInt(riddles.size()));
@@ -44,10 +51,48 @@ extends Activity
 			}
 		});
 
-		final Button answerMe = (Button)findViewById(R.id.answer_me);
+		answerMe = (Button)findViewById(R.id.answer_me);
 		answerMe.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				riddleText.setText(currentRiddle.getResponse());
+			}
+		});
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.riddles_menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.manage_riddles:
+			manageRiddles();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+	
+	/**
+	 * Load the riddles manager content view
+	 * 
+	 * TODO: Fix restoring the main layout
+	 */
+	private void manageRiddles() {
+		setContentView(R.layout.manage_riddles);
+		ListView riddlesList = (ListView) findViewById(R.id.riddles_list);
+		ArrayAdapter<Riddle> adapter = new ArrayAdapter<Riddle>(this, android.R.layout.simple_list_item_1, android.R.id.text1, riddles);
+		riddlesList.setAdapter(adapter);
+		
+		final Button saveButton = (Button)findViewById(R.id.save_button);
+		saveButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				setContentView(R.layout.main);
+				riddleText.setText(currentRiddle.getQuery());
 			}
 		});
 	}
