@@ -1,5 +1,8 @@
 package us.v0gel.riddles;
 
+import android.content.ContentValues;
+import android.database.sqlite.SQLiteDatabase;
+
 public class Riddle {
 	private Long id;
 	private String query;
@@ -42,6 +45,21 @@ public class Riddle {
 	}
 	
 	public String toString() {
-		return query.substring(0, 25).trim() + "...";
+		return query;
+	}
+	
+	public void saveTo(SQLiteDatabase db) {
+		ContentValues values = new ContentValues();
+		values.put(DatabaseHelper.RIDDLE_QUERY_COLUMN, query);
+		values.put(DatabaseHelper.RIDDLE_RESPONSE_COLUMN, response);
+		if(id == null) {
+			setId(db.insert(DatabaseHelper.RIDDLE_TABLE, null, values));
+		} else {
+			db.update(DatabaseHelper.RIDDLE_TABLE, values, DatabaseHelper.RIDDLE_ID_COLUMN + " = ?", new String[]{String.valueOf(id)});
+		}
+	}
+	
+	public void deleteFrom(SQLiteDatabase db) {
+		db.delete(DatabaseHelper.RIDDLE_TABLE, DatabaseHelper.RIDDLE_ID_COLUMN + " = ?", new String[]{String.valueOf(id)});
 	}
 }

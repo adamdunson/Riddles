@@ -7,17 +7,31 @@
         android:id="@+id/riddles_list"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/save_button"
+        android:layout_above="@+id/manage_riddles_buttons"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:dividerHeight="2dp" >
     </ListView>
 
-    <Button
-        android:id="@+id/save_button"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/manage_riddles_buttons"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/save_button" />
+        android:layout_alignParentBottom="true" >
+
+        <Button
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/back_button" />
+
+        <Button
+            android:id="@+id/add_new"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/add_new" />
+    </LinearLayout>
 
 </RelativeLayout>
