@@ -28,20 +28,20 @@ public class Riddle {
 		return id;
 	}
 	
+	public void setQuery(String query) {
+		this.query = query;
+	}
+	
 	public String getQuery() {
 		return query;
 	}
 	
+	public void setResponse(String response) {
+		this.response = response;
+	}
+	
 	public String getResponse() {
 		return response;
-	}
-	
-	public static String riddleMeThis(Riddle riddle) {
-		return riddle.query;
-	}
-	
-	public static String answerMe(Riddle riddle) {
-		return riddle.response;
 	}
 	
 	public String toString() {

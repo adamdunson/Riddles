@@ -66,7 +66,7 @@ extends Activity
 	}
 
 	/**
-	 * Load the main content view
+	 * Load the main content view.
 	 */
 	private void mainRiddles() {
 		setContentView(R.layout.main);
@@ -91,9 +91,9 @@ extends Activity
 	}
 
 	/**
-	 * Load the manage riddles content view
+	 * Load the manage riddles content view.
 	 * 
-	 * TODO: Maybe move this to its own Activity?
+	 * TODO: Move this stuff to its own Activity
 	 */
 	private void manageRiddles() {
 		setContentView(R.layout.manage_riddles);
@@ -102,23 +102,24 @@ extends Activity
 		riddlesListView.setAdapter(adapter);
 		registerForContextMenu(riddlesListView);
 
-		final Button backButton = (Button)findViewById(R.id.back_button);
-		backButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				mainRiddles();
-			}
-		});
-
 		final Button addNew = (Button)findViewById(R.id.add_new);
 		addNew.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				addNewRiddle();
 			}
 		});
+
+		final Button backButton = (Button)findViewById(R.id.back_button);
+		backButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				mainRiddles();
+			}
+		});
 	}
 
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		menu.setHeaderTitle(R.string.manage_riddles);
 		if(v.getId()==R.id.riddles_list) {
 			String[] menuItems = getResources().getStringArray(R.array.manage_riddles_context_menu);
 			for (int i = 0; i<menuItems.length; i++) {
@@ -136,70 +137,113 @@ extends Activity
 		String menuItemName = menuItems[menuItemIndex];
 
 		if(menuItemName.equals(getResources().getString(R.string.edit))) {
-			editRiddle();
+			editRiddle(riddles.get(info.position));
 		} else if(menuItemName.equals(getResources().getString(R.string.delete))) {
 			deleteRiddle(riddles.get(info.position));
-
 		}
 
 		return true;
 	}
-	
-	/**
-	 * Delete a riddle from the list.
-	 * 
-	 * TODO: Maybe add a Y/N prompt in the future?
-	 */
-	private void deleteRiddle(Riddle deadRiddle) {
-		deadRiddle.deleteFrom(db);
-		riddles.remove(deadRiddle);
-		riddleMeThis();
-		riddlesListView.invalidateViews();
-	}
 
 	/**
 	 * Prompt the user to add a new riddle to the list and update the list.
-	 * 
-	 * TODO: Change addNewRiddle to just addNew (to match the edit, delete methods).
 	 */
 	private void addNewRiddle() {
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View editRiddleView = factory.inflate(R.layout.edit_riddle, null);
+		final EditText queryField = (EditText)editRiddleView.findViewById(R.id.edit_query);
+		final EditText responseField = (EditText)editRiddleView.findViewById(R.id.edit_response);
+
+		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch(which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					Riddle riddle = new Riddle(queryField.getText().toString(), responseField.getText().toString());
+					riddles.add(riddle);
+					riddle.saveTo(db);
+					riddlesListView.invalidateViews();
+
+					break;
+				case DialogInterface.BUTTON_NEGATIVE:
+					dialog.cancel();
+					break;
+				}
+			}
+		};
+
 		AlertDialog.Builder alert = new AlertDialog.Builder(this);
 		alert.setTitle(getResources().getString(R.string.add_new_riddle));
-
-		LayoutInflater factory = LayoutInflater.from(this);
-		final View addNewRiddleView = factory.inflate(R.layout.add_new_riddle, null);
-		alert.setView(addNewRiddleView);
-
-		alert.setPositiveButton(getResources().getString(R.string.save_button), new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				EditText newQuery = (EditText) addNewRiddleView.findViewById(R.id.add_new_query);
-				EditText newResponse = (EditText) addNewRiddleView.findViewById(R.id.add_new_response);
-
-				Riddle newRiddle = new Riddle(newQuery.getText().toString(), newResponse.getText().toString());
-				riddles.add(newRiddle);
-				newRiddle.saveTo(db);
-				riddlesListView.invalidateViews();
-			}
-		});
-
-		alert.setNegativeButton(getResources().getString(R.string.cancel_button), new DialogInterface.OnClickListener() {
-			@Override
-			public void onClick(DialogInterface dialog, int which) {
-				dialog.cancel();
-			}
-		});
-
+		alert.setView(editRiddleView);
+		alert.setPositiveButton(getResources().getString(R.string.save), listener);
+		alert.setNegativeButton(getResources().getString(R.string.cancel), listener);
 		alert.show();
 	}
-	
+
 	/**
-	 * Prompt the user to edit a riddle.
-	 * 
-	 * TODO
+	 * Prompt the user to edit a riddle and update it in the list.
 	 */
-	private void editRiddle() {
-		riddlesListView.invalidateViews();
+	private void editRiddle(final Riddle riddle) {
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View editRiddleView = factory.inflate(R.layout.edit_riddle, null);
+		final EditText queryField = (EditText)editRiddleView.findViewById(R.id.edit_query);
+		final EditText responseField = (EditText)editRiddleView.findViewById(R.id.edit_response);
+
+		queryField.setText(riddle.getQuery());
+		responseField.setText(riddle.getResponse()); 
+
+		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch(which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					riddle.setQuery(queryField.getText().toString());
+					riddle.setResponse(responseField.getText().toString());
+					riddle.saveTo(db);
+					riddlesListView.invalidateViews();
+					break;
+				case DialogInterface.BUTTON_NEGATIVE:
+					dialog.cancel();
+					break;
+				}
+			}
+		};
+
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(getResources().getString(R.string.edit_riddle));
+		alert.setView(editRiddleView);
+		alert.setPositiveButton(getResources().getString(R.string.save), listener);
+		alert.setNegativeButton(getResources().getString(R.string.cancel), listener);
+		alert.show();
+	}
+
+	/**
+	 * Prompt the user to delete a riddle and delete it).
+	 */
+	private void deleteRiddle(final Riddle riddle) {
+		DialogInterface.OnClickListener listener = new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				switch(which) {
+				case DialogInterface.BUTTON_POSITIVE:
+					riddle.deleteFrom(db);
+					riddles.remove(riddle);
+					riddleMeThis();
+					riddlesListView.invalidateViews();
+					break;
+				case DialogInterface.BUTTON_NEGATIVE:
+					dialog.cancel();
+					break;
+				}
+			}
+		};
+
+		AlertDialog.Builder alert = new AlertDialog.Builder(this);
+		alert.setTitle(getResources().getString(R.string.delete_riddle));
+		alert.setMessage(getResources().getString(R.string.are_you_sure));
+		alert.setPositiveButton(getResources().getString(R.string.yes), listener);
+		alert.setNegativeButton(getResources().getString(R.string.no), listener);
+		alert.show();
 	}
 
 	/**
@@ -239,7 +283,7 @@ extends Activity
 
 		cursor.close();
 	}
-	
+
 	/**
 	 * Choose a random riddle and assign it to currentRiddle.
 	 * 
