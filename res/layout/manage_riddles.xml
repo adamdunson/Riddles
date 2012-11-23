@@ -21,17 +21,10 @@
 
         <Button
             android:id="@+id/add_new"
-            android:layout_width="wrap_content"
+            android:layout_width="0dip"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="@string/add_new" />
-
-        <Button
-            android:id="@+id/back_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/back_button" />
     </LinearLayout>
 
 </RelativeLayout>

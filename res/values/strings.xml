@@ -5,7 +5,6 @@
     <string name="riddle_me">Give me a riddle.</string>
     <string name="answer_me">I want the answer!</string>
     <string name="manage_riddles">Manage Riddles</string>
-    <string name="back_button">Back</string>
     <string name="add_new">Add New</string>
     <string name="add_new_riddle">Add New Riddle</string>
     <string name="edit">Edit</string>
