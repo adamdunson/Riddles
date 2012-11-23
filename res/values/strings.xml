@@ -4,5 +4,19 @@
     <string name="app_name">Riddles</string>
     <string name="riddle_me">Give me a riddle.</string>
     <string name="answer_me">I want the answer!</string>
+    <string name="manage_riddles">Manage Riddles</string>
+    <string name="add_new">Add New</string>
+    <string name="add_new_riddle">Add New Riddle</string>
+    <string name="edit">Edit</string>
+    <string name="edit_riddle">Edit Riddle</string>
+    <string name="edit_query">Query</string>
+    <string name="edit_response">Response</string>
+    <string name="delete">Delete</string>
+    <string name="delete_riddle">Delete Riddle</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="save">Save</string>
+    <string name="cancel">Cancel</string>
 
 </resources>
